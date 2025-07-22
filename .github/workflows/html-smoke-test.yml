@@ -1,0 +1,18 @@
+name: HTML Smoke Test
+
+on:
+  pull_request:
+    paths:
+      - '**.html'
+      - 'test/html_best_practices_test.sh'
+
+jobs:
+  html-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run HTML Best Practices Smoke Test
+        run: |
+          chmod +x test/html_best_practices_test.sh
+          bash test/html_best_practices_test.sh
