@@ -1,43 +1,149 @@
-# Adding Pages for Private and Internal Repositories
 
-This page provides instructions for Bass Pro Enterprise DevSecOps contributors on how to add informational pages for private and internal repositories within the organization.
-
-## Overview
-You can create additional pages on this GitHub Pages site to provide documentation, onboarding guides, or status updates for internal and private repositories. These pages can help team members and stakeholders find relevant information about each project, even if the repository itself is private.
-
-## Steps to Add a New Page
-
-1. **Create a New HTML File**
-   - In the root directory of this repository, create a new `.html` file (e.g., `repo-<name>.html`).
-   - Use the same CSS and layout style as the main page for consistency. You can copy the structure from `index.html`.
-
-2. **Add Content**
-   - Include the repository name, a brief description, and any relevant documentation or links.
-   - If the repo is private, note that direct access requires appropriate permissions.
-
-3. **Link the New Page**
-   - Update `index.html` to add a link to your new page under the Repository Pages section.
-   - Use a descriptive label for the link (e.g., "Repo 4: Infrastructure Automation").
-
-4. **Submit Your Changes**
-   - Do not commit directly to the `main` branch.
-   - Create a new branch for your changes and open a Pull Request for review.
-
-## Example
-```html
-<!-- Example link in index.html -->
-<li class="repo-link">
-    <svg width="20" height="20" viewBox="0 0 24 24"><path d="..."/></svg>
-    <a href="repo-infra-automation.html" title="Repo 4 (Private)">Repo 4: Infrastructure Automation</a>
-</li>
-```
-
-## Best Practices
-- Keep page content clear and concise.
-- Use consistent styling and structure.
-- Do not expose sensitive or proprietary information on public pages.
-- Reference internal documentation or contact points as needed.
-
----
-
-For questions or help, contact the repository maintainers or open an issue.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adding Pages for Private and Internal Repositories</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.2rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 16px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        .repo-link {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 255, 247, 0.07);
+            border-radius: 10px;
+            padding: 10px 18px;
+            box-shadow: 0 2px 12px 0 rgba(0,255,247,0.12);
+            transition: background 0.2s;
+        }
+        .repo-link:hover {
+            background: rgba(0, 255, 247, 0.18);
+        }
+        .repo-link svg {
+            margin-right: 10px;
+            fill: #00fff7;
+            filter: drop-shadow(0 0 6px #00fff7);
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            padding: 8px 18px;
+            background: rgba(0, 255, 247, 0.07);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00fff7;
+            text-shadow: 0 0 6px #00fff7;
+            box-shadow: 0 2px 12px 0 rgba(0,255,247,0.12);
+            transition: background 0.2s, color 0.2s;
+        }
+        .return-link:hover {
+            background: rgba(0, 255, 247, 0.18);
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="return-link">&#8592; Return to Home</a>
+        <h1>Adding Pages for Private and Internal Repositories</h1>
+        <p>This page provides instructions for Bass Pro Enterprise DevSecOps contributors on how to add informational pages for private and internal repositories within the organization.</p>
+        <h2>Overview</h2>
+        <p>You can create additional pages on this GitHub Pages site to provide documentation, onboarding guides, or status updates for internal and private repositories. These pages can help team members and stakeholders find relevant information about each project, even if the repository itself is private.</p>
+        <h2>Steps to Add a New Page</h2>
+        <ul>
+            <li><strong>Create a New HTML File</strong><br>
+                In the root directory of this repository, create a new <code>.html</code> file (e.g., <code>repo-&lt;name&gt;.html</code>).<br>
+                Use the same CSS and layout style as the main page for consistency. You can copy the structure from <code>index.html</code>.
+            </li>
+            <li><strong>Add Content</strong><br>
+                Include the repository name, a brief description, and any relevant documentation or links.<br>
+                If the repo is private, note that direct access requires appropriate permissions.
+            </li>
+            <li><strong>Link the New Page</strong><br>
+                Update <code>index.html</code> to add a link to your new page under the Repository Pages section.<br>
+                Use a descriptive label for the link (e.g., "Repo 4: Infrastructure Automation").
+            </li>
+            <li><strong>Submit Your Changes</strong><br>
+                Do not commit directly to the <code>main</code> branch.<br>
+                Create a new branch for your changes and open a Pull Request for review.
+            </li>
+        </ul>
+        <h2>Example</h2>
+        <pre><code>&lt;!-- Example link in index.html --&gt;
+&lt;li class="repo-link"&gt;
+    &lt;svg width="20" height="20" viewBox="0 0 24 24"&gt;&lt;path d="..."/&gt;&lt;/svg&gt;
+    &lt;a href="repo-infra-automation.html" title="Repo 4 (Private)"&gt;Repo 4: Infrastructure Automation&lt;/a&gt;
+&lt;/li&gt;
+</code></pre>
+        <h2>Best Practices</h2>
+        <ul>
+            <li>Keep page content clear and concise.</li>
+            <li>Use consistent styling and structure.</li>
+            <li>Do not expose sensitive or proprietary information on public pages.</li>
+            <li>Reference internal documentation or contact points as needed.</li>
+        </ul>
+        <hr>
+        <p><em>For questions or help, contact the repository maintainers or open an issue.</em></p>
+    </div>
+</body>
+</html>
