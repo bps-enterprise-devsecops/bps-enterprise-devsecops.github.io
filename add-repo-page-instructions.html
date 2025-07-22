@@ -1,0 +1,43 @@
+# Adding Pages for Private and Internal Repositories
+
+This page provides instructions for Bass Pro Enterprise DevSecOps contributors on how to add informational pages for private and internal repositories within the organization.
+
+## Overview
+You can create additional pages on this GitHub Pages site to provide documentation, onboarding guides, or status updates for internal and private repositories. These pages can help team members and stakeholders find relevant information about each project, even if the repository itself is private.
+
+## Steps to Add a New Page
+
+1. **Create a New HTML File**
+   - In the root directory of this repository, create a new `.html` file (e.g., `repo-<name>.html`).
+   - Use the same CSS and layout style as the main page for consistency. You can copy the structure from `index.html`.
+
+2. **Add Content**
+   - Include the repository name, a brief description, and any relevant documentation or links.
+   - If the repo is private, note that direct access requires appropriate permissions.
+
+3. **Link the New Page**
+   - Update `index.html` to add a link to your new page under the Repository Pages section.
+   - Use a descriptive label for the link (e.g., "Repo 4: Infrastructure Automation").
+
+4. **Submit Your Changes**
+   - Do not commit directly to the `main` branch.
+   - Create a new branch for your changes and open a Pull Request for review.
+
+## Example
+```html
+<!-- Example link in index.html -->
+<li class="repo-link">
+    <svg width="20" height="20" viewBox="0 0 24 24"><path d="..."/></svg>
+    <a href="repo-infra-automation.html" title="Repo 4 (Private)">Repo 4: Infrastructure Automation</a>
+</li>
+```
+
+## Best Practices
+- Keep page content clear and concise.
+- Use consistent styling and structure.
+- Do not expose sensitive or proprietary information on public pages.
+- Reference internal documentation or contact points as needed.
+
+---
+
+For questions or help, contact the repository maintainers or open an issue.
