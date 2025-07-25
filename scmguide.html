@@ -78,8 +78,8 @@
         code, pre {
             background: #1e293b;
             color: #00fff7;
-            border-radius: 3px;
-            padding: 3px 3px;
+            border-radius: 2px;
+            padding: 2px 2px;
             font-family: 'Roboto Mono', 'Courier New', monospace;
             font-size: 1em;
         }
@@ -259,7 +259,8 @@ The implementation includes:
 </code></pre>
         <pre><code>JIRA-101: Fix: Resolve database connection leak
 
-Identified and fixed a persistent database connection leak in the `UserService` module. The `finally` block was missing a call to close the connection, leading to resource exhaustion over time.
+Identified and fixed a persistent database connection leak in the `UserService` module. 
+The `finally` block was missing a call to close the connection, leading to resource exhaustion over time.
 
 This fix ensures connections are properly closed after use, improving application stability.
 </code></pre>
