@@ -213,7 +213,7 @@ GitHub Environments allow you to define deployment environments (e.g., Developme
 
 4.  For each environment, you can configure:
 
-    -   **Required reviewers:** Select specific teams or users who must approve deployments to this environment.
+    -   **Required reviewers:** Select specific teams or users who must approve deployments to this environment. Ensure that the checkbox for "Prevent self-review" is checked so that users cannot approve their own deployments.
 
     -   **Wait timer:** A delay before a job can proceed.
 

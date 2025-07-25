@@ -266,7 +266,7 @@ jobs:
             <li>Click <strong>New environment</strong> and create environments like <code>development</code>, <code>staging</code>, <code>production</code>.</li>
             <li>For each environment, you can configure:
                 <ul>
-                    <li><strong>Required reviewers:</strong> Select specific teams or users who must approve deployments to this environment.</li>
+                    <li><strong>Required reviewers:</strong> Select specific teams or users who must approve deployments to this environment. Ensure that the checkbox for "Prevent self-review" is checked so that users cannot approve their own deployments.</li>
                     <li><strong>Wait timer:</strong> A delay before a job can proceed.</li>
                     <li><strong>Deployment branches:</strong> Restrict which branches can deploy to this environment.</li>
                     <li><strong>Environment secrets:</strong> Secrets that are only available to jobs targeting this specific environment.</li>
