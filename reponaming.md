@@ -87,23 +87,25 @@ Indicates the architectural type, primary technology, or deployment target of th
 `-cli`: For command-line interface tools.
 
 ## Example Repository Names
-| **Category** | **Example Name(s)** | **Description** |
-| **Backend/API** | `ecommerce-product-api` | Backend API for product management within the e-commerce project. |
-| | `crm-customer-service` | Microservice managing customer data for the CRM system. |
-| **Frontend/UI** | `ecommerce-admin-ui` | Frontend application for the e-commerce administration panel. |
-| | `crm-customer-portal-web` | Web-based customer portal for the CRM system. |
-| **Mobile** | `mobile-app-ios` | iOS specific mobile application. |
-| | `mobile-app-android` | Android specific mobile application. |
-| **Shared/Libraries** | `shared-java-common-lib` | Common Java utility library used across multiple projects. |
-| | `devops-shared-pipeline-templates` | Reusable CI/CD pipeline templates for DevOps. |
-| **Infrastructure** | `infra-aws-eks-cluster` | Terraform/CloudFormation code for AWS EKS cluster infrastructure. |
-| | `infra-vpc-network-config` | Repository holding VPC and network configuration. |
-| **Documentation** | `api-gateway-docs` | Documentation specific to the API Gateway service. |
-| | `platform-developer-guide` | General developer guide for the entire platform. |
-| **Tools/Scripts** | `devops-monitoring-scripts` | Scripts for monitoring infrastructure and applications. |
-| | `data-etl-customer-sync` | Data pipeline for synchronizing customer data. |
-| **Project-Specific** | `projectx-main-app` | A monolithic or full-stack application for "Project X". |
-| | `projectx-auth-service` | Authentication service for "Project X". |
+
+| **Category**         | **Example Name(s)**           | **Description**                                           |
+|----------------------|-------------------------------|-----------------------------------------------------------|
+| Backend/API          | `ecommerce-product-api`       | Backend API for product management within the e-commerce project. |
+|                      | `crm-customer-service`        | Microservice managing customer data for the CRM system.    |
+| Frontend/UI          | `ecommerce-admin-ui`          | Frontend application for the e-commerce administration panel. |
+|                      | `crm-customer-portal-web`     | Web-based customer portal for the CRM system.              |
+| Mobile               | `mobile-app-ios`              | iOS specific mobile application.                           |
+|                      | `mobile-app-android`          | Android specific mobile application.                       |
+| Shared/Libraries     | `shared-java-common-lib`      | Common Java utility library used across multiple projects. |
+|                      | `devops-shared-pipeline-templates` | Reusable CI/CD pipeline templates for DevOps.         |
+| Infrastructure       | `infra-aws-eks-cluster`       | Terraform/CloudFormation code for AWS EKS cluster infrastructure. |
+|                      | `infra-vpc-network-config`    | Repository holding VPC and network configuration.          |
+| Documentation        | `api-gateway-docs`            | Documentation specific to the API Gateway service.         |
+|                      | `platform-developer-guide`    | General developer guide for the entire platform.           |
+| Tools/Scripts        | `devops-monitoring-scripts`   | Scripts for monitoring infrastructure and applications.    |
+|                      | `data-etl-customer-sync`      | Data pipeline for synchronizing customer data.             |
+| Project-Specific     | `projectx-main-app`           | A monolithic or full-stack application for "Project X".   |
+|                      | `projectx-auth-service`       | Authentication service for "Project X".                   |
 
 ## What to Avoid
 **Version Numbers in Name**: **DO NOT** include `v1`, `v2`, `final`, `latest`, `staging`, `prod` etc., in the repository name. Use Git tags, branches, or release management tools for versioning and environment-specific deployments.
