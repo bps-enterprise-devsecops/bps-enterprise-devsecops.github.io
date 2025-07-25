@@ -230,14 +230,12 @@ Clear and consistent commit messages are vital for understanding project history
     - Unit tests for new components and API.
 
     ```
-
+    ```
     JIRA-101: Fix: Resolve database connection leak
 
     Identified and fixed a persistent database connection leak in the `UserService` module. The `finally` block was missing a call to close the connection, leading to resource exhaustion over time.
 
     This fix ensures connections are properly closed after use, improving application stability.
-
-    ```
 
     ```
 
