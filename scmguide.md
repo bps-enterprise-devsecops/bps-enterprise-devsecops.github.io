@@ -50,8 +50,6 @@ GitFlow is a robust branching model designed for managing large projects with sc
 
 #### GitFlow Diagram (Mermaid):
 
-```
-
 ```mermaid
 gitGraph
     commit id: "Initial Commit"
@@ -80,8 +78,6 @@ gitGraph
     merge hotfix/fix-login tag: "Merge Hotfix to Develop"
 ```
 
-```
-
 #### Pros of GitFlow:
 
 -   **Clear Structure:** Well-defined roles for each branch, making it easy to understand the project's state.
@@ -108,8 +104,6 @@ GitHub Flow is a lightweight, continuous delivery-oriented branching model. It's
 
 #### GitHub Flow Diagram (Mermaid):
 
-```
-
 ```mermaid
 gitGraph
     commit id: "Initial Commit"
@@ -122,8 +116,6 @@ gitGraph
     commit id: "Payment Fix"
     checkout main
     merge feature/bugfix-payment tag: "PR #124 Merged"
-```
-
 ```
 
 #### Pros of GitHub Flow:
