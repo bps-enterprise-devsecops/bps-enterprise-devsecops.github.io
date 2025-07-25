@@ -118,15 +118,18 @@
         <h3>Recommended Naming Structure</h3>
         <p>The general structure for repository names will follow a <code>[PREFIX]-[COMPONENT]-[TYPE]</code> pattern, though variations are acceptable based on the specific context.</p>
         <ul>
-            <li><strong>[PREFIX]</strong> <em>(Required for multi-project/large organizations)</em>: Identifies the overarching project, product, or the owning team/department.<br>
+            <li><strong>[PREFIX]</strong> <em>(Required for multi-project/large organizations)</em>:<br>
+                Identifies the overarching project, product, or the owning team/department.  Should <em>NOT</em> include elements of the organization name.<br>
                 <strong>Purpose:</strong> Helps to logically group related repositories and prevent naming conflicts in larger environments.<br>
                 <strong>Examples:</strong> <code>ecommerce</code>, <code>crm</code>, <code>hr-payroll</code>, <code>devops</code>, <code>shared</code>
             </li>
-            <li><strong>[COMPONENT]</strong> <em>(Required)</em>: Describes the specific part, service, or feature that the repository contains. This should be as descriptive as possible.<br>
+            <li><strong>[COMPONENT]</strong> <em>(Required)</em>:<br>
+                Describes the specific part, service, or feature that the repository contains. This should be as descriptive as possible.<br>
                 <strong>Purpose:</strong> Clearly states what the repository is.<br>
                 <strong>Examples:</strong> <code>user-management</code>, <code>order-processing</code>, <code>data-ingestion</code>, <code>payment-gateway</code>, <code>notification-service</code>, <code>customer-portal</code>
             </li>
-            <li><strong>[TYPE]</strong> <em>(Recommended for clarity, especially in microservices architectures)</em>: Indicates the architectural type, primary technology, or deployment target of the component.<br>
+            <li><strong>[TYPE]</strong> <em>(Recommended for clarity, especially in microservices architectures)</em>:<br>
+                Indicates the architectural type, primary technology, or deployment target of the component.<br>
                 <strong>Purpose:</strong> Provides immediate context on the nature of the codebase.<br>
                 <strong>Examples:</strong>
                 <ul>

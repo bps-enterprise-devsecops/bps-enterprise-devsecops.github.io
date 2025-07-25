@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCM Guide | Bass Pro Enterprise DevSecOps</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        h3, h4, h5, h6 {
+            color: #00fff7;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul, ol {
+            color: #e0eafc;
+            margin-bottom: 24px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        .nav-links {
+            margin-bottom: 32px;
+            display: flex;
+            gap: 24px;
+        }
+        .mermaid {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 2px 12px 0 rgba(0,255,247,0.12);
+        }
+        code, pre {
+            background: #1e293b;
+            color: #00fff7;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            font-size: 1em;
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #00fff7;
+            margin: 32px 0;
+        }
+    </style>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">&#8592; Back to Home</a>
+            <a href="guidelines.html">DevSecOps Guidelines</a>
+        </div>
+        <h1>Source Code Management & Branching Policies</h1>
+        <!-- BEGIN CONTENT -->
+        <h2>Introduction</h2>
+        <p>Effective Source Code Management (SCM) and well-defined branching policies are foundational to successful DevOps practices. They ensure code quality, facilitate collaboration, enable continuous integration and delivery, and provide a clear history of development. This document outlines best practices for SCM, focusing on branching strategies, naming conventions, commit message guidelines, and integration with issue tracking systems like Jira.</p>
+        <p>For insights into how to name your repositories, please refer to our <a href="reponaming.html">DevOps Best Practice Document: Repository Naming Conventions</a>.</p>
+        <h2>1. Source Code Management Best Practices</h2>
+        <ul>
+            <li><strong>Version Control System (VCS):</strong> Utilizing a robust VCS like Git.</li>
+            <li><strong>Centralized Source of Truth:</strong> The main branch of the repository serves as the single source of truth for the latest stable code.</li>
+            <li><strong>Atomic Commits:</strong> Commits should represent a single logical change, making it easier to understand history and revert if necessary.</li>
+            <li><strong>Frequent Commits:</strong> Developers should commit small, self-contained changes frequently.</li>
+            <li><strong>Regular Syncing:</strong> Developers should regularly pull changes from the remote repository to minimize merge conflicts.</li>
+            <li><strong>Code Reviews:</strong> All code changes should undergo a review process before being merged into main integration branches.</li>
+            <li><strong>Automated Testing:</strong> Integrate automated tests (unit, integration, end-to-end) into the CI/CD pipeline to validate changes.</li>
+        </ul>
+        <h2>2. Branching Strategies</h2>
+        <h3>2.1 GitFlow Workflow</h3>
+        <p>GitFlow is a robust branching model designed for managing large projects with scheduled release cycles. It defines a strict branching model with two main branches (<code>master</code> and <code>develop</code>) and supporting branches for features, releases, and hotfixes.</p>
+        <ul>
+            <li><strong>master (or main):</strong> Represents the production-ready code. Only stable, fully tested code is merged here. Releases are tagged from this branch.</li>
+            <li><strong>develop:</strong> Integrates all new features and bug fixes for the next release. This is the primary integration branch.</li>
+            <li><strong>feature/*:</strong> Used for developing new features. They branch off <code>develop</code> and merge back into <code>develop</code>.</li>
+            <li><strong>release/*:</strong> Used for preparing new production releases. They branch off <code>develop</code> and merge into both <code>master</code> (or <code>main</code>) and <code>develop</code>. Only bug fixes specific to the release are allowed here.</li>
+            <li><strong>hotfix/*:</strong> Used for quickly patching production bugs. They branch off <code>master</code> (or <code>main</code>) and merge back into both <code>master</code> (or <code>main</code>) and <code>develop</code>.</li>
+        </ul>
+        <div class="mermaid">
+        gitGraph
+            commit id: "Initial Commit"
+            branch develop
+            commit id: "Develop Init"
+            branch feature/add-user-profile
+            commit id: "Feature A"
+            commit id: "Feature B"
+            checkout develop
+            merge feature/add-user-profile tag: "Merge Feature"
+            branch feature/implement-search
+            commit id: "Feature C"
+            checkout develop
+            merge feature/implement-search tag: "Merge Feature 2"
+            branch release/1.0.0
+            commit id: "Release Prep"
+            checkout main
+            merge release/1.0.0 tag: "Release 1.0.0"
+            checkout develop
+            merge release/1.0.0 tag: "Merge Release to Develop"
+            branch hotfix/fix-login
+            commit id: "Hotfix A"
+            checkout main
+            merge hotfix/fix-login tag: "Hotfix Deployed"
+            checkout develop
+            merge hotfix/fix-login tag: "Merge Hotfix to Develop"
+        </div>
+        <h4>Pros of GitFlow</h4>
+        <ul>
+            <li><strong>Clear Structure:</strong> Well-defined roles for each branch, making it easy to understand the project's state.</li>
+            <li><strong>Supports Parallel Development:</strong> Allows multiple teams to work on features, releases, and hotfixes concurrently.</li>
+            <li><strong>Ideal for Scheduled Releases:</strong> Excellent for projects with distinct release cycles and versions.</li>
+        </ul>
+        <h4>Cons of GitFlow</h4>
+        <ul>
+            <li><strong>Complexity:</strong> Can be overly complex for small teams or projects with continuous delivery.</li>
+            <li><strong>More Merging:</strong> Requires more frequent merging, which can lead to conflicts if not managed well.</li>
+        </ul>
+        <h3>2.2 GitHub Flow (Preferred)</h3>
+        <p>GitHub Flow is a lightweight, continuous delivery-oriented branching model. It's simpler than GitFlow and focuses on a single main branch and short-lived feature branches.</p>
+        <ul>
+            <li><strong>main (or master):</strong> Always deployable. All development flows into this branch.</li>
+            <li><strong>feature/* (or any descriptive name):</strong> Created for any new work (features, bug fixes, experiments). They branch off <code>main</code> and are merged back into <code>main</code> via Pull Requests.</li>
+        </ul>
+        <div class="mermaid">
+        gitGraph
+            commit id: "Initial Commit"
+            branch feature/new-dashboard
+            commit id: "Dashboard Work 1"
+            commit id: "Dashboard Work 2"
+            checkout main
+            merge feature/new-dashboard tag: "PR #123 Merged"
+            branch feature/bugfix-payment
+            commit id: "Payment Fix"
+            checkout main
+            merge feature/bugfix-payment tag: "PR #124 Merged"
+        </div>
+        <h4>Pros of GitHub Flow</h4>
+        <ul>
+            <li><strong>Simplicity:</strong> Easy to understand and implement, especially for smaller teams or projects.</li>
+            <li><strong>Continuous Delivery:</strong> Encourages frequent, small deployments, aligning well with CD practices.</li>
+            <li><strong>Less Overhead:</strong> Fewer long-lived branches mean fewer complex merges.</li>
+        </ul>
+        <h4>Cons of GitHub Flow</h4>
+        <ul>
+            <li><strong>Less Structured for Releases:</strong> Can be challenging for projects requiring strict versioning or multiple simultaneous releases.</li>
+            <li><strong>Requires Strong CI/CD:</strong> Relies heavily on automated testing and deployment to ensure <code>main</code> is always deployable.</li>
+        </ul>
+        <h3>2.3 When to Use Which Strategy</h3>
+        <ul>
+            <li><strong>Choose GitFlow if:</strong>
+                <ul>
+                    <li>Your project has distinct release cycles and versions (e.g., v1.0, v1.1, v2.0).</li>
+                    <li>You need to support multiple versions of the software in production simultaneously.</li>
+                    <li>Your team is large and requires a strict, predictable workflow.</li>
+                </ul>
+            </li>
+            <li><strong>Choose GitHub Flow if:</strong>
+                <ul>
+                    <li>You practice Continuous Delivery/Deployment and want to deploy frequently.</li>
+                    <li>Your project is web-based or a SaaS application where the latest version is always active.</li>
+                    <li>Your team prefers a simpler, more agile workflow.</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>3. Branch Naming Policies</h2>
+        <p>Consistent branch naming is essential for clarity and automation.</p>
+        <ul>
+            <li><strong>Format:</strong> All branch names MUST be in lowercase and use hyphens (<code>-</code>) as separators.</li>
+            <li><strong>Prefixes:</strong> Use a clear prefix to indicate the type of work being done.
+                <ul>
+                    <li><code>feature/</code>: For new features or significant enhancements.<br>Example: <code>feature/user-profile-page</code>, <code>feature/api-rate-limiting</code></li>
+                    <li><code>bugfix/</code>: For fixing bugs.<br>Example: <code>bugfix/login-error-fix</code>, <code>bugfix/payment-gateway-timeout</code></li>
+                    <li><code>hotfix/</code>: For urgent production bug fixes (primarily for GitFlow).<br>Example: <code>hotfix/critical-security-patch</code></li>
+                    <li><code>release/</code>: For preparing a new release (primarily for GitFlow).<br>Example: <code>release/1.2.0</code></li>
+                    <li><code>chore/</code>: For routine maintenance tasks, build process updates, dependency upgrades, etc., that don't add features or fix bugs.<br>Example: <code>chore/update-dependencies</code>, <code>chore/refactor-logging</code></li>
+                    <li><code>docs/</code>: For documentation-only changes.<br>Example: <code>docs/update-api-spec</code>, <code>docs/add-contributing-guide</code></li>
+                    <li><code>refactor/</code>: For code restructuring that doesn't change external behavior.<br>Example: <code>refactor/extract-auth-module</code></li>
+                </ul>
+            </li>
+            <li><strong>Jira Issue ID (Mandatory for work branches):</strong> For <code>feature/</code>, <code>bugfix/</code>, and <code>hotfix/</code> branches, include the Jira issue ID at the beginning of the descriptive part of the branch name. This directly links the branch to the related work item.<br>Example: <code>feature/JIRA-123-add-user-profile</code>, <code>bugfix/JIRA-456-fix-login-error</code></li>
+            <li><strong>Descriptive Name:</strong> After the prefix and Jira ID (if applicable), provide a concise, descriptive name that summarizes the purpose of the branch. Avoid generic names.<br>Good: <code>feature/JIRA-789-implement-search-filter</code><br>Bad: <code>feature/search</code>, <code>my-branch</code>, <code>fix-bug</code></li>
+        </ul>
+        <h2>4. Commit Message Guidelines</h2>
+        <p>Clear and consistent commit messages are vital for understanding project history, debugging, and collaboration.</p>
+        <ul>
+            <li><strong>Structure:</strong> Follow the conventional commit message format:
+                <ul>
+                    <li><strong>Subject Line (Mandatory):</strong> A single line, 50 characters max, in imperative mood, describing <em>what</em> the commit does.</li>
+                    <li><strong>Blank Line:</strong> A single blank line separating the subject from the body.</li>
+                    <li><strong>Body (Optional but Recommended):</strong> Detailed explanation of <em>why</em> the change was made, <em>what</em> problem it solves, and <em>how</em> it was implemented. Wrap lines at 72 characters.</li>
+                </ul>
+            </li>
+            <li><strong>Jira Issue ID (Mandatory):</strong> Include the Jira issue ID in the subject line, typically at the beginning. This allows for automated linking and tracking in Jira.<br>Example: <code>JIRA-123: Add user profile page with basic info</code><br>Example: <code>JIRA-456: Fix login error when password contains special chars</code></li>
+        </ul>
+        <h4>Examples:</h4>
+        <pre><code>JIRA-789: Feat: Implement search filter on product listing
+
+This commit introduces a new search filter functionality on the product listing page.
+Users can now filter products by category and price range.
+
+The implementation includes:
+- Frontend components for filter selection.
+- API endpoint for filtered product retrieval.
+- Unit tests for new components and API.
+</code></pre>
+        <pre><code>JIRA-101: Fix: Resolve database connection leak
+
+Identified and fixed a persistent database connection leak in the `UserService` module. The `finally` block was missing a call to close the connection, leading to resource exhaustion over time.
+
+This fix ensures connections are properly closed after use, improving application stability.
+</code></pre>
+        <h2>5. Semantic Versioning (SemVer)</h2>
+        <p>Semantic Versioning is a formal convention for version numbers, defined by a three-part number: <code>MAJOR.MINOR.PATCH</code>. This system communicates the nature of changes in each release, making it easier for consumers to understand potential impacts.</p>
+        <ul>
+            <li><strong>MAJOR version (X.y.z):</strong> Incremented for incompatible API changes. This indicates a breaking change that might require consumers to update their code.</li>
+            <li><strong>MINOR version (x.Y.z):</strong> Incremented for adding functionality in a backward-compatible manner. New features are introduced without breaking existing functionality.</li>
+            <li><strong>PATCH version (x.y.Z):</strong> Incremented for backward-compatible bug fixes. These are typically small, non-breaking fixes.</li>
+        </ul>
+        <h4>Application in SCM:</h4>
+        <ul>
+            <li><strong>Release Tags:</strong> Every official release (e.g., from <code>master</code>/<code>main</code> or <code>release</code> branches) MUST be tagged with a semantic version number (e.g., <code>v1.0.0</code>, <code>v2.1.5</code>).</li>
+            <li><strong>Automated Versioning:</strong> Consider using tools to automate version bumping based on commit messages (e.g., Conventional Commits combined with a semantic release tool).</li>
+            <li><strong>Branching Strategy Alignment:</strong>
+                <ul>
+                    <li><strong>GitFlow:</strong> <code>release/*</code> branches are specifically for preparing a new <code>MAJOR.MINOR.PATCH</code> version. Once merged to <code>master</code>, a tag is applied. Hotfixes also result in new patch versions.</li>
+                    <li><strong>GitHub Flow:</strong> New <code>MAJOR</code>, <code>MINOR</code>, or <code>PATCH</code> versions are typically tagged directly from the <code>main</code> branch after a set of changes (features/fixes) are merged and deemed ready for release.</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>6. Jira Issue Management Integration</h2>
+        <p>Integrating SCM with Jira streamlines workflow and provides traceability from code changes back to business requirements or bug reports.</p>
+        <ul>
+            <li><strong>Mandatory Jira Issue IDs:</strong> As outlined in branch and commit naming policies, every development-related branch and commit MUST include the relevant Jira issue ID.</li>
+            <li><strong>Automated Linking:</strong> Tools like Jira's Git integration (or similar plugins) can automatically link commits, branches, and pull requests to their corresponding Jira issues based on the issue ID in the name/message.</li>
+            <li><strong>Workflow Transitions:</strong> Configure Jira workflows to automatically transition issue statuses (e.g., from "In Progress" to "In Review" when a PR is opened, or "Done" when a PR is merged to <code>main</code>).</li>
+            <li><strong>Traceability:</strong> This integration provides a complete audit trail, showing exactly which code changes relate to which user story, task, or bug.</li>
+        </ul>
+        <h2>7. Pull Request (PR) / Merge Request (MR) Best Practices</h2>
+        <p>Pull Requests are central to code review and quality assurance.</p>
+        <ul>
+            <li><strong>Small, Focused PRs:</strong> Each PR should address a single logical change or Jira issue. This makes reviews easier and faster.</li>
+            <li><strong>Descriptive Titles and Descriptions:</strong>
+                <ul>
+                    <li><strong>Title:</strong> Concise summary, often including the Jira ID (e.g., <code>JIRA-999: Implement user authentication</code>).</li>
+                    <li><strong>Description:</strong> Explain the problem, the solution, any design decisions, testing performed, and potential impacts. Include screenshots or GIFs if helpful.</li>
+                </ul>
+            </li>
+            <li><strong>Automated Checks:</strong> Ensure CI/CD pipelines run automated tests, linting, and static analysis on every PR. PRs should not be mergeable if these checks fail.</li>
+            <li><strong>Code Review:</strong>
+                <ul>
+                    <li><strong>Mandatory Reviewers:</strong> Require at least one (preferably two) approved reviewers.</li>
+                    <li><strong>Constructive Feedback:</strong> Reviewers should provide actionable, constructive feedback.</li>
+                    <li><strong>Timely Reviews:</strong> Encourage prompt reviews to avoid bottlenecks.</li>
+                </ul>
+            </li>
+            <li><strong>Branch Protection Rules:</strong> Configure branch protection rules on <code>main</code>, <code>develop</code>, and <code>release</code> branches to:
+                <ul>
+                    <li>Require successful CI/CD checks.</li>
+                    <li>Require a minimum number of approved reviews.</li>
+                    <li>Disallow direct pushes to protected branches.</li>
+                    <li>Require up-to-date branches before merging.</li>
+                </ul>
+            </li>
+            <li><strong>Squash and Merge (Optional):</strong> Consider squashing commits when merging feature branches to <code>main</code> (or <code>develop</code>) to maintain a clean, linear history on the main branches. Preserve individual commits on feature branches for detailed history during development.</li>
+        </ul>
+        <hr>
+        <h2>Conclusion</h2>
+        <p>Implementing these DevOps best practices for Source Code Management and branching policies will significantly enhance our development workflow. By adopting clear conventions for branching, naming, and commit messages, and by tightly integrating with our issue tracking system, we ensure a transparent, efficient, and high-quality software delivery pipeline. These practices foster better collaboration, reduce errors, and accelerate our ability to deliver value to our users.</p>
+        <!-- END CONTENT -->
+    </div>
+</body>
+</html>

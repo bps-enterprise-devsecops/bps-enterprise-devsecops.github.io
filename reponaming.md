@@ -40,7 +40,7 @@ The general structure for repository names will follow a `[PREFIX]-[COMPONENT]-[
 
 `[PREFIX]` **(Required for multi-project/large organizations)**:
 
-Identifies the overarching project, product, or the owning team/department.
+Identifies the overarching project, product, or the owning team/department.  Should *NOT* include elements of the organization name.
 
 **Purpose**: Helps to logically group related repositories and prevent naming conflicts in larger environments.
 

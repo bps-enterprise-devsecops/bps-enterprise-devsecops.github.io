@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Guide | Bass Pro Enterprise DevSecOps</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        h3, h4, h5, h6 {
+            color: #00fff7;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul, ol {
+            color: #e0eafc;
+            margin-bottom: 24px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        .nav-links {
+            margin-bottom: 32px;
+            display: flex;
+            gap: 24px;
+        }
+        code, pre {
+            background: #1e293b;
+            color: #00fff7;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            font-size: 1em;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #00fff7;
+            margin: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">&#8592; Back to Home</a>
+            <a href="guidelines.html">DevSecOps Guidelines</a>
+        </div>
+        <h1>CI/CD with GitHub and GitHub Actions</h1>
+        <h2>Introduction</h2>
+        <p>Continuous Integration (CI) and Continuous Delivery/Deployment (CD) are cornerstones of modern DevOps practices. They automate the software delivery pipeline, enabling faster, more reliable, and frequent releases. This document outlines best practices for implementing CI/CD using GitHub as the SCM platform and GitHub Actions as the automation engine. It also covers integrating security (DevSecOps) and quality assurance (SonarQube) into the pipeline, along with environment promotion strategies using GitHub Environments.</p>
+        <h2>1. CI/CD Best Practices</h2>
+        <ul>
+            <li><strong>Automate Everything:</strong> From code compilation and testing to deployment and monitoring.</li>
+            <li><strong>Fast Feedback Loops:</strong> Provide quick feedback to developers on the quality and correctness of their changes.</li>
+            <li><strong>Reproducible Builds:</strong> Ensure that any given commit can be built and deployed consistently.</li>
+            <li><strong>Single Source of Truth:</strong> The <code>main</code> branch (or <code>master</code>) should always be in a deployable state.</li>
+            <li><strong>Small, Frequent Changes:</strong> Encourage developers to integrate small changes frequently to minimize merge conflicts and simplify debugging.</li>
+            <li><strong>Shift-Left Security:</strong> Integrate security checks early in the development lifecycle.</li>
+            <li><strong>Quality Gates:</strong> Implement automated gates (e.g., passing tests, security scans, code quality thresholds) that must be met before code can progress through the pipeline.</li>
+        </ul>
+        <h2>2. GitHub and GitHub Actions Overview</h2>
+        <ul>
+            <li><strong>GitHub Repositories:</strong> Serve as the central hub for code, pull requests, and collaboration.</li>
+            <li><strong>GitHub Actions:</strong> An event-driven automation platform. Workflows are defined in YAML files (<code>.github/workflows/</code>) and can be triggered by various events (push, pull request, schedule, manual dispatch).</li>
+            <li><strong>Runners:</strong> GitHub-hosted runners provide a managed environment to execute workflows, or self-hosted runners can be used for custom environments.</li>
+        </ul>
+        <h2>3. GitHub Actions Workflows: Examples</h2>
+        <h3>3.1 Basic CI Workflow (Build & Test)</h3>
+        <p>This workflow triggers on <code>push</code> and <code>pull_request</code> events to the <code>main</code> branch, building the application and running unit tests.</p>
+        <pre><code># .github/workflows/ci.yml
+name: CI Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Use a GitHub-hosted runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Action to checkout your repository code
+
+      - name: Setup Node.js (Example for a Node.js project)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify your Node.js version
+
+      - name: Install dependencies
+        run: npm ci # Use npm ci for clean installs in CI environments
+
+      - name: Run tests
+        run: npm test # Execute your test suite
+
+      - name: Build application
+        run: npm run build # Build your application (e.g., for deployment artifacts)
+
+      # Example for a Java project (replace Node.js steps)
+      # - name: Setup Java JDK
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     distribution: 'temurin'
+      #     java-version: '17'
+      # - name: Build with Maven
+      #   run: mvn clean install
+</code></pre>
+        <h3>3.2 Automated SonarQube Analysis</h3>
+        <p>Integrate SonarQube for static code analysis to maintain code quality and identify code smells, bugs, and vulnerabilities. This typically runs as part of the CI process.</p>
+        <pre><code># .github/workflows/ci.yml (add to existing CI workflow or create a new one)
+name: CI Build, Test, and SonarQube
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-sonarqube:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # SonarQube requires a full history for accurate analysis
+          fetch-depth: 0
+
+      - name: Setup Java JDK (Required for SonarQube Scanner)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Build with Maven and SonarQube analysis (Example for Java/Maven)
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=<YOUR_SONARQUBE_PROJECT_KEY> -Dsonar.host.url=<YOUR_SONARQUBE_URL> -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        env:
+          # SONAR_TOKEN should be stored as a GitHub Secret in your repository settings
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # For JavaScript/TypeScript projects, you might use sonar-scanner-cli
+      # - name: Install SonarQube Scanner CLI
+      #   run: npm install -g sonarqube-scanner
+      # - name: Run SonarQube Scan
+      #   run: sonar-scanner -Dsonar.projectKey=<YOUR_SONARQUBE_PROJECT_KEY> -Dsonar.sources=. -Dsonar.host.url=<YOUR_SONARQUBE_URL> -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+</code></pre>
+        <p><strong>Note:</strong> Replace <code>&lt;YOUR_SONARQUBE_PROJECT_KEY&gt;</code> and <code>&lt;YOUR_SONARQUBE_URL&gt;</code> with your actual SonarQube project key and server URL. The <code>SONAR_TOKEN</code> must be stored as a GitHub Secret.</p>
+        <h3>3.3 DevSecOps Practices: Trivy for Vulnerability Scanning</h3>
+        <p>Integrating security scanning early in the pipeline is a key DevSecOps practice. Trivy is a popular open-source vulnerability scanner for container images, file systems, and more.</p>
+        <pre><code># .github/workflows/ci.yml (add to existing CI workflow or create a new one)
+name: CI Build, Test, and Security Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ... (Your build and test steps here) ...
+
+      - name: Build Docker image (if applicable)
+        run: docker build -t my-app:latest . # Replace with your image build command
+
+      - name: Run Trivy vulnerability scan on image
+        uses: aquasecurity/trivy-action@master # Use the official Trivy GitHub Action
+        with:
+          image-ref: 'my-app:latest' # Scan the image you just built
+          format: 'table' # Output format (table, json, sarif)
+          exit-code: '1' # Fail the workflow if vulnerabilities are found (e.g., critical, high)
+          severity: 'CRITICAL,HIGH' # Specify severity levels to fail on
+
+      - name: Run Trivy file system scan (alternative/additional scan)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs' # Scan the file system (your repository code)
+          input: '.' # Scan the current directory
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+</code></pre>
+        <p><strong>Aqua Security:</strong> While Trivy is a standalone tool from Aqua Security, Aqua also offers a comprehensive platform for cloud-native security. For full integration with Aqua Security's enterprise platform (e.g., image assurance policies, runtime protection), you would typically use their dedicated scanner or integrate with their API. This often involves more complex setup beyond a simple GitHub Action example, but the principle remains: integrate security scans early and often.</p>
+        <h2>4. GitHub Environments for Environment Promotion with Approvals</h2>
+        <p>GitHub Environments allow you to define deployment environments (e.g., Development, Staging, Production) and configure environment-specific rules, including required reviewers, wait timers, and environment secrets. This is crucial for controlled promotion through your CD pipeline.</p>
+        <h3>4.1 Setting up GitHub Environments</h3>
+        <ol>
+            <li>Navigate to your repository on GitHub.</li>
+            <li>Go to <strong>Settings</strong> &gt; <strong>Environments</strong>.</li>
+            <li>Click <strong>New environment</strong> and create environments like <code>development</code>, <code>staging</code>, <code>production</code>.</li>
+            <li>For each environment, you can configure:
+                <ul>
+                    <li><strong>Required reviewers:</strong> Select specific teams or users who must approve deployments to this environment. Ensure that the checkbox for "Prevent self-review" is checked so that users cannot approve their own deployments.</li>
+                    <li><strong>Wait timer:</strong> A delay before a job can proceed.</li>
+                    <li><strong>Deployment branches:</strong> Restrict which branches can deploy to this environment.</li>
+                    <li><strong>Environment secrets:</strong> Secrets that are only available to jobs targeting this specific environment.</li>
+                </ul>
+            </li>
+        </ol>
+        <h3>4.2 CD Workflow with Environments and Approvals</h3>
+        <p>This example demonstrates a multi-stage deployment pipeline using environments with approvals.</p>
+        <pre><code># .github/workflows/cd.yml
+name: CD Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment when code is pushed to main
+
+jobs:
+  deploy-to-development:
+    runs-on: ubuntu-latest
+    environment:
+      name: development # Target the 'development' environment
+      url: https://dev.your-app.com # Optional: URL for the deployed application
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Development
+        run: |
+          echo "Deploying to Development environment..."
+          # Add your deployment commands here (e.g., kubectl apply, serverless deploy, ansible playbook)
+          # Example: deploy using a simple script
+          echo "Application deployed to Development!"
+
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    needs: deploy-to-development # This job runs only after 'deploy-to-development' succeeds
+    environment:
+      name: staging # Target the 'staging' environment
+      url: https://staging.your-app.com # Optional: URL for the deployed application
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to Staging environment..."
+          # Add your deployment commands here
+          echo "Application deployed to Staging!"
+
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging # This job runs only after 'deploy-to-staging' succeeds
+    environment:
+      name: production # Target the 'production' environment
+      url: https://your-app.com # Optional: URL for the deployed application
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to Production environment..."
+          # Add your deployment commands here
+          echo "Application deployed to Production!"
+</code></pre>
+        <p><strong>To set up approvals:</strong> In your GitHub repository settings, under <strong>Environments</strong>, click on the <code>staging</code> and <code>production</code> environments. Under "Deployment protection rules," enable "Required reviewers" and select the teams or individuals who must approve deployments to these environments. When a workflow attempts to deploy to these environments, it will pause until the required reviewers approve.</p>
+        <hr>
+        <h2>Conclusion</h2>
+        <p>By leveraging GitHub and GitHub Actions for CI/CD, teams can establish robust, automated pipelines that accelerate software delivery while maintaining high standards of quality and security. Integrating tools like SonarQube for code quality and Trivy for vulnerability scanning enables a "shift-left" approach to DevSecOps. Furthermore, GitHub Environments with approval gates provide critical control and governance over deployments to sensitive environments, ensuring a secure and reliable release process.</p>
+    </div>
+</body>
+</html>
