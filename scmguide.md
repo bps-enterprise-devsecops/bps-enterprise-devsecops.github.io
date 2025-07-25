@@ -92,7 +92,7 @@ gitGraph
 
 -   **More Merging:** Requires more frequent merging, which can lead to conflicts if not managed well.
 
-### 2.2 GitHub Flow
+### 2.2 GitHub Flow (Preferred)
 
 GitHub Flow is a lightweight, continuous delivery-oriented branching model. It's simpler than GitFlow and focuses on a single main branch and short-lived feature branches.
 
