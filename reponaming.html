@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Naming Conventions</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.2rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 16px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        .return-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            padding: 8px 18px;
+            background: rgba(0, 255, 247, 0.07);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00fff7;
+            text-shadow: 0 0 6px #00fff7;
+            box-shadow: 0 2px 12px 0 rgba(0,255,247,0.12);
+            transition: background 0.2s, color 0.2s;
+        }
+        .return-link:hover {
+            background: rgba(0, 255, 247, 0.18);
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display:flex; gap:16px; margin-bottom:24px;">
+            <a href="guidelines.html" class="return-link">&#8592; Return to Guidelines</a>
+            <a href="index.html" class="return-link">&#8592; Return to Home</a>
+        </div>
+        <h1>DevOps Best Practice Document: Repository Naming Conventions</h1>
+        <h2>Introduction</h2>
+        <p>This document outlines the recommended best practices for naming repositories within our IT software development environment. Adhering to these conventions is crucial for maintaining a well-organized codebase, fostering collaboration, enhancing code discoverability, and streamlining our DevOps workflows. Consistent naming improves clarity, reduces ambiguity, and makes it easier for all team members to understand and navigate our projects.</p>
+
+        <h2>Core Principles of Repository Naming</h2>
+        <ul>
+            <li><strong>Clarity and Descriptiveness:</strong> The repository name must immediately convey its purpose, content, and primary functionality. It should be self-explanatory to anyone viewing the repository list.</li>
+            <li><strong>Consistency:</strong> A uniform naming scheme will be applied across all repositories, projects, and teams. This ensures predictability and ease of navigation regardless of the specific project.</li>
+            <li><strong>Readability:</strong> Names should be easy to read and mentally parse, avoiding overly complex or cryptic abbreviations.</li>
+            <li><strong>Conciseness:</strong> While descriptive, names should be as short as possible without sacrificing clarity.</li>
+            <li><strong>Searchability:</strong> Well-structured and consistently named repositories are significantly easier to locate using search tools and filters.</li>
+            <li><strong>Future-Proofing:</strong> Repository names should be stable and not require frequent changes. Avoid including information that is prone to change (e.g., version numbers).</li>
+            <li><strong>URL and File System Compatibility:</strong> Names must only use characters that are safe and compatible with URLs and common file system paths.</li>
+        </ul>
+
+        <h2>Recommended Naming Elements and Formats</h2>
+        <h3>General Formatting Rules</h3>
+        <ul>
+            <li><strong>Lowercase:</strong> All repository names MUST be in lowercase.</li>
+            <li><strong>Separators:</strong>
+                <ul>
+                    <li><strong>Hyphens (-):</strong> Preferred separator for words within a repository name (e.g., <code>my-project-api</code>). Hyphens enhance readability, especially in URLs, and are widely adopted.</li>
+                    <li><strong>Underscores (_):</strong> <span style="color:#fff200">Are <strong>NOT</strong> to be used as word separators.</span></li>
+                </ul>
+            </li>
+            <li><strong>No Spaces:</strong> Spaces are strictly forbidden in repository names.</li>
+            <li><strong>No Special Characters:</strong> Only alphanumeric characters (a-z, 0-9) and hyphens (-) are permitted. Avoid characters such as /, \ , :, |, ?, *, ", <, >, etc.</li>
+            <li><strong>No Leading/Trailing Hyphens:</strong> Repository names should not start or end with a hyphen.</li>
+        </ul>
+
+        <h3>Recommended Naming Structure</h3>
+        <p>The general structure for repository names will follow a <code>[PREFIX]-[COMPONENT]-[TYPE]</code> pattern, though variations are acceptable based on the specific context.</p>
+        <ul>
+            <li><strong>[PREFIX]</strong> <em>(Required for multi-project/large organizations)</em>: Identifies the overarching project, product, or the owning team/department.<br>
+                <strong>Purpose:</strong> Helps to logically group related repositories and prevent naming conflicts in larger environments.<br>
+                <strong>Examples:</strong> <code>ecommerce</code>, <code>crm</code>, <code>hr-payroll</code>, <code>devops</code>, <code>shared</code>
+            </li>
+            <li><strong>[COMPONENT]</strong> <em>(Required)</em>: Describes the specific part, service, or feature that the repository contains. This should be as descriptive as possible.<br>
+                <strong>Purpose:</strong> Clearly states what the repository is.<br>
+                <strong>Examples:</strong> <code>user-management</code>, <code>order-processing</code>, <code>data-ingestion</code>, <code>payment-gateway</code>, <code>notification-service</code>, <code>customer-portal</code>
+            </li>
+            <li><strong>[TYPE]</strong> <em>(Recommended for clarity, especially in microservices architectures)</em>: Indicates the architectural type, primary technology, or deployment target of the component.<br>
+                <strong>Purpose:</strong> Provides immediate context on the nature of the codebase.<br>
+                <strong>Examples:</strong>
+                <ul>
+                    <li><code>-api</code>: For RESTful APIs or backend services.</li>
+                    <li><code>-service</code>: For general backend services or microservices.</li>
+                    <li><code>-ui</code>: For user interface/frontend applications.</li>
+                    <li><code>-web</code>: For generic web applications.</li>
+                    <li><code>-mobile-ios</code>, <code>-mobile-android</code>, <code>-mobile-flutter</code>: For mobile applications.</li>
+                    <li><code>-lib</code>, <code>-common</code>, <code>-shared</code>: For shared libraries or common utility code.</li>
+                    <li><code>-docs</code>: For project documentation.</li>
+                    <li><code>-config</code>: For configuration repositories (e.g., central config service).</li>
+                    <li><code>-infra</code>, <code>-terraform</code>, <code>-cloudformation</code>: For infrastructure-as-code.</li>
+                    <li><code>-pipeline</code>, <code>-scripts</code>: For CI/CD pipeline definitions or automation scripts.</li>
+                    <li><code>-data-etl</code>: For data extraction, transformation, and loading processes.</li>
+                    <li><code>-cli</code>: For command-line interface tools.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Example Repository Names</h3>
+        <table style="width:100%;border-collapse:collapse;background:rgba(30,41,59,0.7);color:#e0eafc;">
+            <thead>
+                <tr style="background:rgba(0,255,247,0.07);">
+                    <th style="padding:8px;border-bottom:1px solid #00fff7;">Category</th>
+                    <th style="padding:8px;border-bottom:1px solid #00fff7;">Example Name(s)</th>
+                    <th style="padding:8px;border-bottom:1px solid #00fff7;">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Backend/API</td><td><code>ecommerce-product-api</code></td><td>Backend API for product management within the e-commerce project.</td></tr>
+                <tr><td></td><td><code>crm-customer-service</code></td><td>Microservice managing customer data for the CRM system.</td></tr>
+                <tr><td>Frontend/UI</td><td><code>ecommerce-admin-ui</code></td><td>Frontend application for the e-commerce administration panel.</td></tr>
+                <tr><td></td><td><code>crm-customer-portal-web</code></td><td>Web-based customer portal for the CRM system.</td></tr>
+                <tr><td>Mobile</td><td><code>mobile-app-ios</code></td><td>iOS specific mobile application.</td></tr>
+                <tr><td></td><td><code>mobile-app-android</code></td><td>Android specific mobile application.</td></tr>
+                <tr><td>Shared/Libraries</td><td><code>shared-java-common-lib</code></td><td>Common Java utility library used across multiple projects.</td></tr>
+                <tr><td></td><td><code>devops-shared-pipeline-templates</code></td><td>Reusable CI/CD pipeline templates for DevOps.</td></tr>
+                <tr><td>Infrastructure</td><td><code>infra-aws-eks-cluster</code></td><td>Terraform/CloudFormation code for AWS EKS cluster infrastructure.</td></tr>
+                <tr><td></td><td><code>infra-vpc-network-config</code></td><td>Repository holding VPC and network configuration.</td></tr>
+                <tr><td>Documentation</td><td><code>api-gateway-docs</code></td><td>Documentation specific to the API Gateway service.</td></tr>
+                <tr><td></td><td><code>platform-developer-guide</code></td><td>General developer guide for the entire platform.</td></tr>
+                <tr><td>Tools/Scripts</td><td><code>devops-monitoring-scripts</code></td><td>Scripts for monitoring infrastructure and applications.</td></tr>
+                <tr><td></td><td><code>data-etl-customer-sync</code></td><td>Data pipeline for synchronizing customer data.</td></tr>
+                <tr><td>Project-Specific</td><td><code>projectx-main-app</code></td><td>A monolithic or full-stack application for "Project X".</td></tr>
+                <tr><td></td><td><code>projectx-auth-service</code></td><td>Authentication service for "Project X".</td></tr>
+            </tbody>
+        </table>
+
+        <h2>What to Avoid</h2>
+        <ul>
+            <li><strong>Version Numbers in Name:</strong> <span style="color:#fff200">DO NOT</span> include <code>v1</code>, <code>v2</code>, <code>final</code>, <code>latest</code>, <code>staging</code>, <code>prod</code> etc., in the repository name. Use Git tags, branches, or release management tools for versioning and environment-specific deployments.</li>
+            <li><strong>Generic Names:</strong> Avoid ambiguous names like <code>my-repo</code>, <code>project-alpha</code>, <code>test</code>, <code>temp</code>.</li>
+            <li><strong>Developer Names:</strong> Do not include individual developer names (e.g., <code>john-doe-feature</code>).</li>
+            <li><strong>Redundancy:</strong> Avoid repeating information that is already clear from the project context or existing naming elements.</li>
+            <li><strong>Acronyms without Context:</strong> While some well-known acronyms are acceptable (e.g., <code>api</code>, <code>ui</code>, <code>cli</code>), avoid obscure or internal-only acronyms without clear documentation.</li>
+        </ul>
+
+        <h2>Enforcement and Documentation</h2>
+        <ol>
+            <li><strong>Training and Communication:</strong> All team members, especially new hires, will be educated on these naming conventions. Regular reminders will be issued as needed.</li>
+            <li><strong>Code Review/Pull Request Checks:</strong> During code reviews or pull request processes, reviewers should ensure that any new repositories adhere to these guidelines.</li>
+            <li><strong>Documentation:</strong> This document will be accessible to all developers and regularly reviewed and updated as our practices evolve. It should be linked in relevant onboarding materials and team wikis.</li>
+            <li><strong>Automated Checks (Future Consideration):</strong> Where feasible, consider implementing automated checks in CI/CD pipelines or repository creation tools to enforce naming conventions programmatically.</li>
+        </ol>
+        <p>By consistently applying these best practices, we will foster a more organized, efficient, and collaborative development environment, ultimately contributing to higher quality software delivery.</p>
+    </div>
+</body>
+</html>
