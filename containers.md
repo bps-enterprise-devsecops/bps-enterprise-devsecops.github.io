@@ -289,7 +289,7 @@ jobs:
 
 ### 5.2 JavaScript (Node.js) Applications
 
--   **Multi-Stage Builds:** Essential for Node.js to exclude `node_modules` from the final image, significantly reducing size.
+-   **Multi-Stage Builds:** Use multi-stage builds to leverage Docker layer caching for faster builds and to ensure that build tools and development dependencies are excluded from the final image. Only include necessary runtime files (such as `node_modules` if required for production) in the final layer to optimize image size and security.
 
 -   **`.dockerignore`:** Use a comprehensive `.dockerignore` file to exclude unnecessary files (e.g., `node_modules` from the host, `.git`, `dist` if built in a separate stage, `npm-debug.log`).
 
