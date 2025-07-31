@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Containerization Guide | Bass Pro Enterprise DevSecOps</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        h3, h4, h5, h6 {
+            color: #00fff7;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul, ol {
+            color: #e0eafc;
+            margin-bottom: 24px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        .nav-links {
+            margin-bottom: 32px;
+            display: flex;
+            gap: 24px;
+        }
+        code, pre {
+            background: #1e293b;
+            color: #00fff7;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            font-size: 1em;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #00fff7;
+            margin: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">&#8592; Back to Home</a>
+            <a href="guidelines.html">DevSecOps Guidelines</a>
+        </div>
+        <h1>Containerization Best Practices</h1>
+        <h2>Introduction</h2>
+        <p>Containerization has revolutionized software development and deployment by packaging applications and their dependencies into isolated units called containers. This approach ensures consistency across different environments, from development to production, and significantly streamlines the Continuous Integration/Continuous Delivery (CI/CD) pipeline. This document outlines best practices for containerizing applications, focusing on building efficient and secure images, managing them in private registries, deploying them with Helm charts to Kubernetes, and integrating robust DevSecOps practices with Aqua Security.</p>
+        <h2>1. Containerization Best Practices</h2>
+        <h3>1.1 Multi-Stage Builds</h3>
+        <p>Multi-stage builds are a powerful Docker feature that allows you to use multiple <code>FROM</code> statements in your Dockerfile. Each <code>FROM</code> instruction can use a different base image, and you can selectively copy artifacts from one stage to another, discarding everything else. This significantly reduces the final image size and attack surface.</p>
+        <ul>
+            <li><strong>Reduced Image Size:</strong> Only necessary runtime artifacts are included in the final image.</li>
+            <li><strong>Improved Security:</strong> Development tools, build dependencies, and temporary files are not shipped to production.</li>
+            <li><strong>Cleaner Images:</strong> Fewer unnecessary layers and files.</li>
+        </ul>
+        <pre><code># Stage 1: Build the application
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --only=production # Install production dependencies first for caching
+
+COPY . .
+RUN npm run build # Build your application (e.g., React, Angular, Vue)
+
+# Stage 2: Create the final lightweight runtime image
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy only the necessary files from the builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist # Or wherever your build output is
+COPY --from=builder /app/package.json ./package.json # Only if needed for runtime scripts
+
+# If it's a web server, expose the port
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"] # Adjust to your application's entry point
+</code></pre>
+        <h3>1.2 Minimal Base Images</h3>
+        <p>Always start with the smallest possible base image that meets your application's needs. Alpine Linux-based images (e.g., <code>alpine</code>, <code>node:18-alpine</code>, <code>openjdk:17-alpine</code>) are generally much smaller and have fewer vulnerabilities than their full OS counterparts.</p>
+        <h3>1.3 Optimize Layer Caching</h3>
+        <ul>
+            <li>Place frequently changing instructions (e.g., <code>COPY . .</code>) after less frequently changing ones (e.g., <code>COPY package.json</code>, <code>RUN npm ci</code>).</li>
+            <li>Install dependencies before copying application code.</li>
+        </ul>
+        <h3>1.4 Run as Non-Root User</h3>
+        <p>By default, containers run as the <code>root</code> user. This is a security risk. Always create and switch to a non-root user within your Dockerfile.</p>
+        <pre><code># ... (previous stages) ...
+
+FROM node:18-alpine
+
+# Create a non-root user
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+USER appuser
+
+WORKDIR /app
+
+# ... (copy files) ...
+
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+</code></pre>
+        <h3>1.5 Environment Variables and Secrets</h3>
+        <ul>
+            <li><strong>Environment Variables:</strong> Use <code>ENV</code> instructions for non-sensitive configuration that changes between environments (e.g., <code>ENV NODE_ENV=production</code>).</li>
+            <li><strong>Secrets:</strong> NEVER hardcode sensitive information (API keys, database credentials) directly into Dockerfiles or container images. Use Kubernetes Secrets, Vault, or other secret management solutions, injecting them at runtime.</li>
+        </ul>
+        <h3>1.6 Resource Limits</h3>
+        <p>Define CPU and memory limits for your containers in your Kubernetes deployment manifests. This prevents a single container from consuming all available cluster resources and improves stability.</p>
+        <h2>2. Private Azure Container Registry (ACR)</h2>
+        <p>Azure Container Registry (ACR) is a managed, private Docker registry service in Azure. It's used to store and manage your private Docker container images and related artifacts (like Helm charts).</p>
+        <ul>
+            <li><strong>Company Registry with Project/LOB Paths:</strong> Use a single company-wide ACR instance and organize images by project or line of business (LOB) using repository paths (e.g., <code>company.azurecr.io/project/app</code> or <code>company.azurecr.io/lob/app</code>). This simplifies management and access control while maintaining separation between projects.</li>
+            <li><strong>Geo-Replication:</strong> For global deployments, enable geo-replication to distribute images across multiple Azure regions, improving pull performance and disaster recovery.</li>
+            <li><strong>Vulnerability Scanning Integration:</strong> Integrate Aqua Security container scanning (e.g., Trivy or Aqua Platform) into your CI/CD pipeline to scan images before pushing to ACR. This ensures vulnerabilities are detected and remediated early, maintaining a secure registry.</li>
+            <li><strong>Aqua Assurance Policies:</strong> Enforce Aqua assurance policies in your deployment workflow to ensure only compliant container images are allowed to be deployed. Configure policies to block images with critical vulnerabilities or non-compliant configurations, providing automated security gates before images reach production.</li>
+            <li><strong>Role-Based Access Control (RBAC):</strong> Implement strict RBAC to control who can push, pull, or delete images. Grant the least privilege necessary.</li>
+            <li><strong>Automated Image Pushing:</strong> Integrate image pushing into your CI/CD pipeline after successful builds and scans.</li>
+        </ul>
+        <pre><code># ... (after build and scan steps) ...
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Azure service principal credentials
+
+      - name: Docker Login to ACR
+        run: |
+          az acr login --name <your-acr-name>
+
+      - name: Tag and Push Docker Image to ACR
+        run: |
+          docker tag my-app:latest <your-acr-name>.azurecr.io/my-app:$(git rev-parse --short HEAD)
+          docker push <your-acr-name>.azurecr.io/my-app:$(git rev-parse --short HEAD)
+</code></pre>
+        <p><strong>Note:</strong>  <code>AZURE_CREDENTIALS</code> should be a GitHub Secret containing a JSON object for an Azure Service Principal with <code>AcrPush</code> role on your ACR.</p>
+        <h2>3. Kubernetes Deployment with Helm Charts</h2>
+        <p>Helm is the package manager for Kubernetes. It allows you to define, install, and upgrade even the most complex Kubernetes applications.</p>
+        <ul>
+            <li><strong>Chart Structure:</strong> Follow the standard Helm chart structure (<code>Chart.yaml</code>, <code>values.yaml</code>, <code>templates/</code>, <code>charts/</code>).</li>
+            <li><strong>Templating:</strong> Use Helm's templating engine effectively to parameterize your Kubernetes manifests (Deployments, Services, Ingresses, etc.) using <code>values.yaml</code>.</li>
+            <li><strong>values.yaml:</strong>
+                <ul>
+                    <li>Separate environment-specific configurations into different <code>values.yaml</code> files or use <code>--set</code> flags during deployment.</li>
+                    <li>Keep sensitive information out of <code>values.yaml</code> (use Kubernetes Secrets).</li>
+                </ul>
+            </li>
+            <li><strong>Dependencies:</strong> Manage chart dependencies using <code>Chart.yaml</code> and <code>helm dependency update</code>.</li>
+            <li><strong>Release Management:</strong>
+                <ul>
+                    <li>Use <code>helm upgrade --install</code> for idempotent deployments.</li>
+                    <li>Leverage Helm's rollback capabilities (<code>helm rollback</code>) for quick recovery.</li>
+                    <li>Integrate Helm deployment into your CD pipeline.</li>
+                </ul>
+            </li>
+            <li><strong>Linter and Tests:</strong> Use <code>helm lint</code> to check for common issues and <code>helm test</code> for chart-specific tests.</li>
+            <li><strong>Version Control:</strong> Store your Helm charts in a separate Git repository or within the application's repository.</li>
+        </ul>
+        <pre><code>my-app-chart/
+├── Chart.yaml             # Information about the chart
+├── values.yaml            # Default values for the chart
+├── templates/
+│   ├── deployment.yaml    # Kubernetes Deployment manifest
+│   ├── service.yaml       # Kubernetes Service manifest
+│   ├── ingress.yaml       # Kubernetes Ingress manifest (optional)
+│   ├── _helpers.tpl       # Helper templates
+│   └── NOTES.txt          # Instructions for users
+└── charts/                # Subcharts (dependencies)
+</code></pre>
+        <h2>4. DevSecOps with Aqua Security (Container Scans & SBOM)</h2>
+        <p>Integrating security throughout the container lifecycle is critical. Aqua Security provides comprehensive solutions for container security, including vulnerability scanning, compliance checks, and runtime protection.</p>
+        <h3>4.1 Aqua Container Scans</h3>
+        <ul>
+            <li><strong>Vulnerabilities:</strong> CVEs in OS packages and application dependencies.</li>
+            <li><strong>Misconfigurations:</strong> Security issues in Dockerfiles and Kubernetes configurations.</li>
+            <li><strong>Sensitive Data:</strong> Hardcoded secrets or sensitive files.</li>
+            <li><strong>Malware:</strong> Presence of malicious code.</li>
+        </ul>
+        <h4>Best Practices for Aqua Scans in CI/CD:</h4>
+        <ul>
+            <li><strong>Scan Early:</strong> Perform scans immediately after image build.</li>
+            <li><strong>Automated Gates:</strong> Configure your CI/CD pipeline to fail if critical or high-severity vulnerabilities are found.</li>
+            <li><strong>Policy Enforcement:</strong> Define security policies (e.g., no critical vulnerabilities, specific base images allowed) and enforce them in the pipeline.</li>
+            <li><strong>Integration with GitHub Actions:</strong> Use Aqua's GitHub Actions for seamless integration.</li>
+        </ul>
+        <h3>4.2 Software Bill of Materials (SBOM) Generation</h3>
+        <p>An SBOM is a formal, machine-readable inventory of software components and dependencies. It's crucial for understanding your application's supply chain risks. Aqua Trivy can generate SBOMs in various formats (e.g., SPDX, CycloneDX).</p>
+        <pre><code># .github/workflows/ci-cd.yml
+name: Container Build, Scan, Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-scan-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-app:latest .
+
+      - name: Run Aqua Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'my-app:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH' # Fail on critical/high vulnerabilities
+
+      - name: Generate SBOM with Aqua Trivy
+        run: |
+          trivy image --format spdx-json --output sbom.spdx.json my-app:latest
+          # Upload SBOM as a workflow artifact for later use/storage
+          # This SBOM can be consumed by other security tools or for compliance
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-my-app
+          path: sbom.spdx.json
+
+      # ... (Subsequent steps for pushing to ACR and deploying with Helm) ...
+</code></pre>
+        <h2>5. Language-Specific Containerization Best Practices</h2>
+        <h3>5.1 Java Applications</h3>
+        <ul>
+            <li><strong>JIB:</strong> Consider using JIB (from Google) for building Docker images. It's a Docker-less Java container image builder that handles multi-stage builds automatically and optimizes image layers.
+                <ul>
+                    <li><strong>Maven:</strong>  <code>mvn compile jib:dockerBuild</code></li>
+                    <li><strong>Gradle:</strong>  <code>gradle jibDockerBuild</code></li>
+                </ul>
+            </li>
+            <li><strong>Base Image:</strong> Use slim OpenJDK images (e.g., <code>openjdk:17-jre-slim-buster</code> or <code>openjdk:17-jdk-slim-bullseye</code> for build, then <code>openjdk:17-jre-slim-bullseye</code> for runtime).</li>
+            <li><strong>JAR/WAR Packaging:</strong> Ensure your application is packaged as a single executable JAR/WAR.</li>
+            <li><strong>JVM Tuning:</strong> Tune JVM parameters (<code>-Xms</code>, <code>-Xmx</code>, garbage collector settings) within the container to optimize memory usage and performance based on allocated container resources.</li>
+            <li><strong>Entrypoint:</strong> Use <code>java -jar your-app.jar</code> as the <code>ENTRYPOINT</code> or <code>CMD</code>.</li>
+        </ul>
+        <h3>5.2 JavaScript (Node.js) Applications</h3>
+        <ul>
+            <li><strong>Multi-Stage Builds:</strong> Use multi-stage builds to leverage Docker layer caching for faster builds and to ensure that build tools and development dependencies are excluded from the final image. Only include necessary runtime files (such as <code>node_modules</code> if required for production) in the final layer to optimize image size and security.</li>
+            <li><strong>.dockerignore:</strong> Use a comprehensive <code>.dockerignore</code> file to exclude unnecessary files (e.g., <code>node_modules</code> from the host, <code>.git</code>, <code>dist</code> if built in a separate stage, <code>npm-debug.log</code>).</li>
+            <li><strong>npm ci vs. npm install:</strong> Always use <code>npm ci</code> in CI/CD and Docker builds for clean, reproducible installations based on <code>package-lock.json</code>.</li>
+            <li><strong>Production Dependencies:</strong> Use <code>npm ci --only=production</code> in the final image stage to install only production dependencies.</li>
+            <li><strong>Environment:</strong> Set <code>NODE_ENV=production</code> in the production image.</li>
+            <li><strong>Process Management:</strong> For production, consider using a process manager like PM2 (though often Kubernetes handles this) or ensuring your Node.js app gracefully handles signals.</li>
+        </ul>
+        <hr>
+        <h2>Conclusion</h2>
+        <p>Containerization is a powerful enabler for DevOps, providing consistency, portability, and efficiency. By adopting best practices such as multi-stage builds, minimal base images, and robust security scanning with tools like Aqua Security, teams can build secure and optimized container images. Leveraging private registries like Azure Container Registry for image management and Helm charts for Kubernetes deployments ensures a streamlined and reliable path from code to production. These practices collectively contribute to a mature, secure, and agile software delivery pipeline.</p>
+    </div>
+</body>
+</html>

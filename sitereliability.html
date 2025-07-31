@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Reliability Engineering (SRE) Best Practices</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.5rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        h3 {
+            color: #00b3ff;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin-top: 32px;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 24px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        .nav-links {
+            margin-top: 32px;
+            display: flex;
+            gap: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Site Reliability Engineering (SRE) Best Practices and General Responsibilities</h1>
+        <p><strong>Introduction</strong><br>
+        Site Reliability Engineering (SRE) is a discipline that incorporates aspects of software engineering and applies them to infrastructure and operations problems. The main goals are to create highly reliable and scalable software systems. SRE aims to bridge the gap between development (who want to release new features quickly) and operations (who want to ensure system stability). This document outlines the core principles, general responsibilities, and best practices for an SRE team.</p>
+        <h2>1. Core Principles of SRE</h2>
+        <ul>
+            <li><strong>Embracing Risk:</strong> Understanding that 100% reliability is often not cost-effective or necessary. SRE defines an acceptable level of unreliability (Error Budget) and uses it to balance reliability with feature velocity.</li>
+            <li><strong>Service Level Objectives (SLOs):</strong> Defining measurable targets for the reliability of a service, based on Service Level Indicators (SLIs). SLOs drive decision-making and resource allocation.</li>
+            <li><strong>Error Budget:</strong> The maximum amount of downtime or unreliability a service can incur over a period while still meeting its SLOs. When the error budget is consumed, feature development may be paused to focus on reliability work.</li>
+            <li><strong>Reducing Toil:</strong> Automating repetitive, manual, tactical, and devoid-of-enduring-value work (toil) to free up engineers for more strategic, engineering-focused tasks.</li>
+            <li><strong>Monitoring and Observability:</strong> Implementing comprehensive monitoring to understand system behavior, identify issues proactively, and measure SLOs. Observability goes beyond monitoring to understand why something is happening.</li>
+            <li><strong>Automation:</strong> Automating as many operational tasks as possible, including deployments, scaling, incident response, and infrastructure provisioning.</li>
+            <li><strong>Postmortems (Blameless Culture):</strong> Conducting thorough analyses of incidents to understand root causes, learn from failures, and prevent recurrence, without assigning blame to individuals.</li>
+            <li><strong>Simplicity:</strong> Striving for simple, understandable, and maintainable systems and processes.</li>
+        </ul>
+        <h2>2. General Responsibilities of an SRE Team</h2>
+        <ul>
+            <li><strong>System Reliability and Availability:</strong>
+                <ul>
+                    <li>Ensuring the continuous availability, performance, efficiency, and scalability of production systems.</li>
+                    <li>Defining, measuring, and reporting on SLOs and SLIs.</li>
+                    <li>Managing and utilizing the error budget.</li>
+                </ul>
+            </li>
+            <li><strong>Incident Management:</strong>
+                <ul>
+                    <li>Being on-call for critical system incidents.</li>
+                    <li>Responding to alerts, triaging issues, and leading incident resolution.</li>
+                    <li>Conducting post-incident reviews (postmortems) and implementing follow-up actions.</li>
+                </ul>
+            </li>
+            <li><strong>Automation and Tooling:</strong>
+                <ul>
+                    <li>Developing and maintaining automation tools for operational tasks (e.g., deployments, scaling, patching, self-healing).</li>
+                    <li>Building and improving monitoring, alerting, and logging systems.</li>
+                    <li>Creating tools to reduce manual toil.</li>
+                </ul>
+            </li>
+            <li><strong>Capacity Planning and Performance Optimization:</strong>
+                <ul>
+                    <li>Forecasting future resource needs based on growth and usage patterns.</li>
+                    <li>Optimizing system performance and resource utilization.</li>
+                    <li>Ensuring systems can handle anticipated load spikes.</li>
+                </ul>
+            </li>
+            <li><strong>Deployment and Release Engineering:</strong>
+                <ul>
+                    <li>Designing, building, and maintaining robust CI/CD pipelines.</li>
+                    <li>Automating software releases and rollbacks.</li>
+                    <li>Ensuring safe and reliable deployments to production.</li>
+                </ul>
+            </li>
+            <li><strong>Infrastructure Management:</strong>
+                <ul>
+                    <li>Managing and provisioning infrastructure (often using Infrastructure as Code - IaC).</li>
+                    <li>Ensuring infrastructure is secure, scalable, and resilient.</li>
+                    <li>Collaborating with platform teams on underlying infrastructure.</li>
+                </ul>
+            </li>
+            <li><strong>Collaboration and Consultation:</strong>
+                <ul>
+                    <li>Working closely with development teams to ensure new features are designed with reliability and operability in mind ("shifting left").</li>
+                    <li>Providing expertise on system design, performance, and scalability.</li>
+                    <li>Educating development teams on SRE principles and best practices.</li>
+                </ul>
+            </li>
+            <li><strong>Disaster Recovery and Business Continuity:</strong>
+                <ul>
+                    <li>Developing and testing disaster recovery plans.</li>
+                    <li>Ensuring systems can recover from major outages.</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>3. SRE Best Practices</h2>
+        <h3>3.1 Define and Monitor SLOs/SLIs</h3>
+        <ul>
+            <li><strong>Start Simple:</strong> Begin with a few critical SLOs (e.g., availability, latency) for your most important services.</li>
+            <li><strong>User-Centric:</strong> Define SLOs from the perspective of the end-user experience.</li>
+            <li><strong>Measurable:</strong> Ensure SLIs are quantifiable and can be accurately collected (e.g., request latency, error rate, throughput).</li>
+            <li><strong>Visibility:</strong> Make SLO dashboards and error budget consumption visible to all relevant teams (Dev, Product, SRE).</li>
+        </ul>
+        <h3>3.2 Implement a Blameless Postmortem Culture</h3>
+        <ul>
+            <li><strong>Focus on Systems, Not People:</strong> The goal is to understand what went wrong and why, not who was responsible.</li>
+            <li><strong>Document Thoroughly:</strong> Detail the incident timeline, impact, root cause, and actionable items.</li>
+            <li><strong>Actionable Follow-ups:</strong> Ensure every postmortem results in concrete, assigned tasks to prevent recurrence.</li>
+            <li><strong>Share Learnings:</strong> Disseminate lessons learned across the organization to improve collective resilience.</li>
+        </ul>
+        <h3>3.3 Automate Toil Away</h3>
+        <ul>
+            <li><strong>Identify Toil:</strong> Regularly review operational tasks to identify repetitive, manual work.</li>
+            <li><strong>Prioritize Automation:</strong> Focus on automating tasks that are frequent, error-prone, or consume significant engineer time.</li>
+            <li><strong>Treat Automation as Code:</strong> Apply software engineering best practices (version control, testing, code review) to automation scripts and tools.</li>
+            <li><strong>Measure Toil Reduction:</strong> Track the impact of automation on engineer time and system reliability.</li>
+        </ul>
+        <h3>3.4 Implement Robust Monitoring and Alerting</h3>
+        <ul>
+            <li><strong>Comprehensive Metrics:</strong> Collect metrics on system health, performance, and business-level indicators.</li>
+            <li><strong>Structured Logging:</strong> Implement centralized, searchable logging with consistent formats.</li>
+            <li><strong>Distributed Tracing:</strong> Use tracing to understand request flows across microservices.</li>
+            <li><strong>Actionable Alerts:</strong> Alerts should be meaningful, indicate a real problem, and provide enough context for quick diagnosis. Avoid alert fatigue.</li>
+            <li><strong>Alerting on SLOs:</strong> Configure alerts to fire when SLOs are at risk or about to be breached.</li>
+        </ul>
+        <h3>3.5 Practice Chaos Engineering</h3>
+        <ul>
+            <li><strong>Proactive Failure Injection:</strong> Intentionally introduce failures into systems (in controlled environments) to identify weaknesses before they cause real outages.</li>
+            <li><strong>Hypothesis-Driven:</strong> Formulate a hypothesis about system behavior under stress, run an experiment, and observe the outcome.</li>
+            <li><strong>Start Small:</strong> Begin with non-critical systems and gradually increase the scope and severity of experiments.</li>
+        </ul>
+        <h3>3.6 Embrace Infrastructure as Code (IaC)</h3>
+        <ul>
+            <li><strong>Version Control Infrastructure:</strong> Manage all infrastructure definitions in Git (e.g., using Terraform, CloudFormation, Ansible).</li>
+            <li><strong>Automated Provisioning:</strong> Provision and manage infrastructure through automated pipelines.</li>
+            <li><strong>Reproducibility:</strong> Ensure environments can be recreated consistently and reliably.</li>
+        </ul>
+        <h3>3.7 Promote a Culture of Shared Ownership</h3>
+        <ul>
+            <li><strong>Dev and Ops Collaboration:</strong> Foster strong collaboration between development and SRE teams.</li>
+            <li><strong>"You Build It, You Run It" (or "You Build It, We'll Help You Run It"):</strong> Encourage developers to take more ownership of the operational aspects of their services.</li>
+            <li><strong>Knowledge Sharing:</strong> Document systems, processes, and runbooks thoroughly.</li>
+        </ul>
+        <h2>Conclusion</h2>
+        <p>SRE is a continuous journey towards operational excellence. By adopting these principles and best practices, organizations can build more reliable, scalable, and efficient systems, leading to improved user experience and business outcomes. The SRE role is not just about keeping the lights on; it's about applying engineering rigor to operations to fundamentally improve system reliability and empower rapid, safe innovation.</p>
+        <div class="nav-links">
+            <a href="guidelines.html">&#8592; Back to Guidelines</a>
+            <a href="index.html">&#8592; Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>
