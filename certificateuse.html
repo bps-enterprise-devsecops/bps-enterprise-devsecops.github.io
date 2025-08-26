@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Guideline for Certificate Generation</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+        <script type="module">
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+            mermaid.initialize({ startOnLoad: true });
+        </script>
+        <style>
+        body {
+            font-family: 'Roboto', 'Orbitron', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0eafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 40px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h1 {
+            color: #00fff7;
+            margin-bottom: 18px;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            font-size: 2.2rem;
+            text-shadow: 0 0 8px #00fff7, 0 0 24px #0ff;
+        }
+        h2 {
+            color: #00b3ff;
+            font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+            text-shadow: 0 0 6px #00b3ff;
+        }
+        h3 {
+            color: #00b3ff;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin-top: 32px;
+        }
+        p {
+            color: #e0eafc;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 24px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        a {
+            color: #00fff7;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 6px #00fff7;
+        }
+        a:hover {
+            color: #fff200;
+            text-shadow: 0 0 12px #fff200, 0 0 24px #fff200;
+        }
+        em {
+            color: #fff200;
+            font-style: normal;
+            text-shadow: 0 0 8px #fff200;
+        }
+        .nav-links {
+            margin-top: 32px;
+            display: flex;
+            gap: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DevOps Guideline for Certificate Generation</h1>
+        <p>This guide outlines best practices for certificate generation in a DevOps environment, focusing on different types of certificates and their appropriate use cases.</p>
+        <h2>Public vs. Private Certificates</h2>
+        <p><strong>Public certificates</strong> are signed by a trusted Certificate Authority (CA), like DigiCert, Sectigo, or Let's Encrypt. They're essential for anything accessible by the general public, as they verify the identity of a server and encrypt data in transit. Your web browsers and operating systems automatically trust these CAs, ensuring a seamless user experience.</p>
+        <p><strong>Private certificates</strong> are signed by your organization's own internal CA. They are used for internal, non-public-facing services and are not trusted by external browsers. Examples include communication between microservices, internal APIs, or internal tools. Using private certificates for internal services improves security by preventing man-in-the-middle attacks and ensures that traffic within your network remains encrypted.</p>
+        <hr>
+        <h2>Wildcard and Specific Domain Certificates</h2>
+        <p>A wildcard certificate is a single certificate that secures multiple subdomains under a domain. For instance, a certificate for <code>*.example.com</code> would secure <code>www.example.com</code>, <code>api.example.com</code>, and <code>blog.example.com</code>.</p>
+        <p><strong>Do not use a wildcard at the sub-domain level</strong> (e.g., <code>*.sub.example.com</code>). This practice can introduce security risks and management complexity. Instead, use a specific certificate for each sub-domain, such as <code>app.sub.example.com</code> and <code>api.sub.example.com</code>, or a wildcard at the top level (<code>*.example.com</code>) if necessary.</p>
+        <p><strong>Use a wildcard certificate at the sub-sub-domain level</strong> (e.g., <code>*.app.team-a.example.com</code>). This is useful for environments where you have many dynamically provisioned services under a specific team or application, like <code>service1.app.team-a.example.com</code> and <code>service2.app.team-a.example.com</code>. This approach simplifies certificate management for a large number of internal-facing or test environments without compromising security.</p>
+        <hr>
+        <h2>Cross-Domain Certificates</h2>
+        <p>A <strong>cross-domain certificate</strong>, also known as a Subject Alternative Name (SAN) certificate, secures multiple distinct domains on a single certificate. For example, a single SAN certificate can cover <code>www.example.com</code>, <code>www.example.org</code>, and <code>api.example-a.net</code>. Use these when a single server or service needs to secure multiple, unrelated domains, which is common in a multi-tenant or consolidated hosting environment. This consolidates certificate management and simplifies deployment.</p>
+        <hr>
+        <h2>Free vs. Paid Certificates</h2>
+        <p>Choosing between a free certificate like those from Let's Encrypt and a paid one from a CA like DigiCert or Sectigo depends on the service's audience and purpose.</p>
+        <ul>
+            <li><strong>Use a free Let's Encrypt public certificate for non-customer-facing applications.</strong> These certificates are great for internal tools, APIs, development environments, and staging servers. They provide the same level of encryption as paid certificates and are free, automated, and widely supported. Let's Encrypt is an excellent choice for a DevOps environment that values speed and automation.</li>
+            <li><strong>Use a paid certificate like DigiCert or Sectigo for customer-facing applications.</strong> Paid certificates often come with additional features and benefits that are crucial for a business, such as:
+                <ul>
+                    <li><strong>Warranties:</strong> Paid CAs offer warranties that protect the end-user or business in the event of a CA-related security breach.</li>
+                    <li><strong>Customer support:</strong> Paid CAs provide dedicated support for any issues with certificate issuance or validation.</li>
+                    <li><strong>Extended validation (EV) certificates:</strong> Some paid certificates offer a higher level of trust validation, displaying the organization's name in the browser's address bar. While less common now, this can still be a differentiator for certain businesses.</li>
+                    <li><strong>Trust and brand reputation:</strong> Using a well-known CA can add a layer of perceived trust for customers.</li>
+                </ul>
+            </li>
+        </ul>
+            <hr>
+            <h2>Certificate Selection Decision Tree</h2>
+            <div class="mermaid">
+graph TD
+    A[Start: What are you securing?] --> B{Is it customer-facing?};
+    B -- Yes --> C{Is it a single domain?};
+    C -- Yes --> D(Use a paid certificate, e.g., DigiCert or Sectigo);
+    C -- No --> E{Are you securing multiple, distinct domains?};
+    E -- Yes --> F(Use a paid Cross-Domain / SAN Certificate);
+    E -- No --> G{Are you securing a single domain with multiple sub-sub-domains?};
+    G -- Yes --> H(Use a paid Wildcard Certificate for sub-sub-domain level);
+    G -- No --> D;
+
+    B -- No --> I{Is it an internal, non-public service?};
+    I -- Yes --> J(Use a private certificate signed by your internal CA);
+    I -- No --> K{Is it a public, but non-customer-facing application?};
+    K -- Yes --> L{Is it a single domain?};
+    L -- Yes --> M(Use a free Let's Encrypt certificate);
+    L -- No --> N{Are you securing multiple, distinct domains?};
+    N -- Yes --> O(Use a free SAN Certificate from Let's Encrypt);
+    N -- No --> P{Are you securing a single domain with multiple sub-sub-domains?};
+    P -- Yes --> Q(Use a free Wildcard Certificate from Let's Encrypt for sub-sub-domain level);
+    P -- No --> M;
+</div>
+        <div class="nav-links">
+            <a href="guidelines.html">&#8592; Back to Guidelines</a>
+            <a href="index.html">&#8592; Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>
